@@ -1,12 +1,18 @@
 package de.mpicbg.scf.rhaase.fiji.ij2course.regions;
 
 import ij.gui.Roi;
-import java.awt.*;
-import net.imglib2.*;
+
+import java.awt.Rectangle;
+
+import net.imglib2.FinalRealInterval;
+import net.imglib2.RealInterval;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealPositionable;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.roi.util.Contains;
 import net.imglib2.roi.util.ContainsRealRandomAccess;
 import net.imglib2.type.logic.BoolType;
-import net.imglib2.util.Intervals;
 
 /**
  * Author: Robert Haase, Scientific Computing Facility, MPI-CBG Dresden,
@@ -44,6 +50,9 @@ public class RoiRealRandomAccessibleRealInterval implements RealRandomAccessible
 
     public RoiRealRandomAccessibleRealInterval(Roi roi) {
         this.roi = roi;
+        Rectangle rect = roi.getBounds();
+        System.out.println("Rect = " + rect);
+        boundingBox = FinalRealInterval.createMinMax(rect.x, rect.y, rect.width + 1, rect.height + 1);
     }
 
     @Override
@@ -65,4 +74,42 @@ public class RoiRealRandomAccessibleRealInterval implements RealRandomAccessible
     public Contains<RealLocalizable> copyContains() {
         return this;
     }
+
+		@Override
+		public int numDimensions() {
+			return boundingBox.numDimensions();
+		}
+
+		@Override
+		public double realMin(int d) {
+			return boundingBox.realMin(d);
+		}
+
+		@Override
+		public void realMin(double[] min) {
+			boundingBox.realMin(min);
+		}
+
+		@Override
+		public void realMin(RealPositionable min) {
+			boundingBox.realMin(min);
+		}
+
+		@Override
+		public double realMax(int d) {
+			return boundingBox.realMin(d);
+		}
+
+		@Override
+		public void realMax(double[] max) {
+			boundingBox.realMax(max);
+		}
+
+		@Override
+		public boolean contains(RealLocalizable l) {
+			int x = (int) l.getDoublePosition(0);
+			int y = (int) l.getDoublePosition(1);
+			return roi.contains(x, y);
+		}
+
 }
