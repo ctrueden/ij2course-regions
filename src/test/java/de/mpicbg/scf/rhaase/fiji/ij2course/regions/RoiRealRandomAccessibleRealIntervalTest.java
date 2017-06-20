@@ -17,6 +17,7 @@ import net.imglib2.type.BooleanType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 import org.junit.Test;
 
@@ -80,7 +81,7 @@ public class RoiRealRandomAccessibleRealIntervalTest {
             originalMaskRandomAccess.setPosition(position);
 
             // check if both mask images contain equal pixel values
-            assertEquals (originalMaskRandomAccess.get().get(), pixel.get());
+            assertEquals (Util.printCoordinates(raiMaskCursor), originalMaskRandomAccess.get().get(), pixel.get());
 
             RealPoint realPosition = new RealPoint(new double[]{position[0], position[1]});
 
